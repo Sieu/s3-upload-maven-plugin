@@ -18,6 +18,7 @@ Configuration parameters
 | endpoint    | Use a different s3 endpoint                                                 | *no* | s3.amazonaws.com                                                                            |
 | publicRead  | Set PublicRead on ACL                                                       | *no* | false                                                                                       |
 | publicWrite | Set PublicWrite on ACL                                                      | *no* | false                                                                                       |
+
 Example: Upload a file
 ----------------------
 ```xml
