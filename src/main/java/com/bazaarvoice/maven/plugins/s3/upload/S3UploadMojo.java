@@ -3,7 +3,6 @@ package com.bazaarvoice.maven.plugins.s3.upload;
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
 import com.amazonaws.internal.StaticCredentialsProvider;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
@@ -59,6 +58,15 @@ public class S3UploadMojo extends AbstractMojo
   /** Force override of endpoint for S3 regions such as EU. */
   @Parameter(property = "s3-upload.endpoint")
   private String endpoint;
+
+  /** Set PublicRead on file ACL. **/
+  @Parameter(property = "s3-upload.public-read", defaultValue = "false")
+  private boolean publicRead;
+
+  /** Set PublicReadWrite on file ACL. **/
+  @Parameter(property = "s3-upload.public-write", defaultValue = "false")
+  private boolean publicWrite;
+
 
   /** In the case of a directory upload, recursively upload the contents. */
   @Parameter(property = "s3-upload.recursive", defaultValue = "false")
@@ -122,11 +130,17 @@ public class S3UploadMojo extends AbstractMojo
   private boolean upload(AmazonS3 s3, File sourceFile) throws MojoExecutionException
   {
     TransferManager mgr = new TransferManager(s3);
-
     Transfer transfer;
     if (sourceFile.isFile()) {
-      transfer = mgr.upload(new PutObjectRequest(bucketName, destination, sourceFile)
-              .withCannedAcl(CannedAccessControlList.BucketOwnerFullControl));
+      PutObjectRequest request = new PutObjectRequest(bucketName, destination, sourceFile)
+              .withCannedAcl(CannedAccessControlList.BucketOwnerFullControl);
+      if(publicRead) {
+        request = request.withCannedAcl(CannedAccessControlList.PublicRead);
+      }
+      if(publicWrite) {
+        request = request.withCannedAcl(CannedAccessControlList.PublicReadWrite);
+      }
+      transfer = mgr.upload(request);
     } else if (sourceFile.isDirectory()) {
       transfer = mgr.uploadDirectory(bucketName, destination, sourceFile, recursive,
               new ObjectMetadataProvider() {
@@ -137,6 +151,12 @@ public class S3UploadMojo extends AbstractMojo
                    * for directory uploads otherwise.
                    */
                   objectMetadata.setHeader(Headers.S3_CANNED_ACL, CannedAccessControlList.BucketOwnerFullControl);
+                  if(publicRead) {
+                    objectMetadata.setHeader(Headers.S3_CANNED_ACL, CannedAccessControlList.PublicRead);
+                  }
+                  if(publicWrite) {
+                    objectMetadata.setHeader(Headers.S3_CANNED_ACL, CannedAccessControlList.PublicReadWrite);
+                  }
                 }
               });
     } else {

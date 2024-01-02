@@ -5,18 +5,19 @@ Uploads a file or (recursively) the contents of a directory to S3.
 Configuration parameters
 ------------------------
 
-| Parameter | Description | Required | Default |
-|-----------|-------------|----------|---------|
-|bucketName|The name of the bucket|*yes*| |
-|source|The source file or folder (was sourceFile before 1.2)|*yes*| |
-|destination|The destination file or destination folder (was destinationFile before 1.2)| *yes*| |
-|recursive|If this is a directory copy, recursively copy all contents (since 1.2)| *no* | false |
-|profileName|AWS profile | *no* | if unspecified, uses the ProfileCredentialsProvider Provider, falling back to env variables |
-|accessKey|S3 access key | *no* | if unspecified, uses the ProfileCredentialsProvider Provider, falling back to env variables |
-|secretKey|S3 secret key | *no* | if unspecified, uses the ProfileCredentialsProvider Provider, falling back to env variables |
-|doNotUpload|Dry run| *no* | false |
-|endpoint|Use a different s3 endpoint| *no* | s3.amazonaws.com |
-
+| Parameter   | Description                                                                 | Required | Default                                                                                     |
+|-------------|-----------------------------------------------------------------------------|----------|---------------------------------------------------------------------------------------------|
+| bucketName  | The name of the bucket                                                      |*yes*|                                                                                             |
+| source      | The source file or folder (was sourceFile before 1.2)                       |*yes*|                                                                                             |
+| destination | The destination file or destination folder (was destinationFile before 1.2) | *yes*|                                                                                             |
+| recursive   | If this is a directory copy, recursively copy all contents (since 1.2)      | *no* | false                                                                                       |
+| profileName | AWS profile                                                                 | *no* | if unspecified, uses the ProfileCredentialsProvider Provider, falling back to env variables |
+| accessKey   | S3 access key                                                               | *no* | if unspecified, uses the ProfileCredentialsProvider Provider, falling back to env variables |
+| secretKey   | S3 secret key                                                               | *no* | if unspecified, uses the ProfileCredentialsProvider Provider, falling back to env variables |
+| doNotUpload | Dry run                                                                     | *no* | false                                                                                       |
+| endpoint    | Use a different s3 endpoint                                                 | *no* | s3.amazonaws.com                                                                            |
+| publicRead  | Set PublicRead on ACL                                                       | *no* | false                                                                                       |
+| publicWrite | Set PublicWrite on ACL                                                      | *no* | false                                                                                       |
 Example: Upload a file
 ----------------------
 ```xml
